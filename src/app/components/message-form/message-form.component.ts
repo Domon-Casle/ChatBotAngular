@@ -20,6 +20,11 @@ export class MessageFormComponent implements OnInit {
 
   private botResponseConverter: BotResponseMessage = null;
 
+  private hasSaidHello = false;
+  private hasSaidHi = false;
+  private hasSaidHowdy = false;
+  private hasSaidBigHi = false;
+
   constructor(private luisAIService: LuisaiService) { 
     this.botResponseConverter = new BotResponseMessage();
   }
@@ -36,20 +41,53 @@ export class MessageFormComponent implements OnInit {
     this.message.timestamp = new Date();
     this.messages.push(this.message);
 
-    var test = this.luisAIService.getResponse(this.message.content).pipe(
-      map((res: Response) => res.text())
-    )
-    .subscribe(
-      luisResult => {
-        var luisResultJSON = JSON.parse(luisResult.toString());
-        console.log(luisResultJSON);
-        var result = this.getBotResponseMessage(luisResultJSON);
-        var botMessage = new Message(result, true);
-        this.messages.push(botMessage);
-      },
-      err => console.log(err),
-      () => console.log("No errors to report!")
-    );;
+    switch (this.message.content) {
+      case "hi":
+        var hiMessage = new Message('Hi!', true);
+        this.messages.push(hiMessage);
+        this.hasSaidHi = true;
+        break;
+
+      case "howdy":
+        var hiMessage = new Message('Howdy!!', true);
+        this.messages.push(hiMessage);
+        this.hasSaidHowdy = true;
+        break;
+
+      case "hello":
+        var hiMessage = new Message('Hello!!!', true);
+        this.messages.push(hiMessage);
+        this.hasSaidHello = true;
+        break;
+      
+      case "goodbye":
+        var goodByeMessage = new Message('Good bye!!!! Have a great day!', true);
+        this.messages.push(goodByeMessage);
+        break;
+
+      default:
+        this.luisAIService.getResponse(this.message.content).pipe(
+          map((res: Response) => res.text())
+        )
+        .subscribe(
+          luisResult => {
+            var luisResultJSON = JSON.parse(luisResult.toString());
+            console.log(luisResultJSON);
+            var result = this.getBotResponseMessage(luisResultJSON);
+            var botMessage = new Message(result, true);
+            this.messages.push(botMessage);
+          },
+          err => console.log(err),
+          () => console.log("No errors to report!")
+        );
+        break;
+    }
+
+    if (this.hasSaidHello && this.hasSaidHi && this.hasSaidHowdy && !this.hasSaidBigHi) {
+      var bigHiMessage = new Message('Ok ok i get it HI! Howdy! and Hello! Have a great one!', true);
+      this.messages.push(bigHiMessage);
+      this.hasSaidBigHi = true;
+    }
 
     this.message = new Message('', false);
   }
