@@ -12,7 +12,7 @@ export class BotResponse {
         this.answer = answer;
         this.why = why;
         this.askedWhy = askedWhy;
-        this.link = why;
+        this.link = link;
     }
 
     getString() {

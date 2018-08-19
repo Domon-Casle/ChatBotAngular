@@ -7,7 +7,7 @@ const setAOrB = () => [
     },
     {
         entity: 'spaces',
-        why: 'Can be more specific with them and does not cause issues when going from a person that has tabs at 2 to 4.'
+        why: 'I can be more specific with them and does not cause issues when going from a person that has tabs at 2 to 4.'
     }
 ];
 
@@ -17,7 +17,7 @@ const setAccounts = () => [
         link: 'https://github.com/Domon-Casle'
     },
     {
-        entity: 'stackoverflow',
+        entity: 'stack overflow',
         link: 'https://stackoverflow.com/users/story/9535264#'
     },
     {
@@ -88,7 +88,7 @@ export class BotResponseMessage {
                             entityB = entities[index].entity;
                             break;
 
-                        case 'and why':
+                        case 'andWhy':
                             askedWhy = true;
                             break;
 
@@ -151,23 +151,18 @@ export class BotResponseMessage {
 
                 for (var index in entities) {
                     switch (entities[index].type) {
-                        case 'favoriteItem':
-                            entity = entities[index].entity;
-                            break;
-
-                        case 'and why':
+                        case 'andWhy':
                             askedWhy = true;
                             break;
                             
                         default:
-                            console.log('Something is wrong!');
+                            entity = entities[index].entity;
                             break;
                     }
                 }
 
-                var entity = entities[0].entity;
                 for (var option in this.savedFavorite) {
-                    if (this.savedFavorite[option].toLowerCase() === entity.toLowerCase()) {
+                    if (this.savedFavorite[option].entity.toLowerCase() === entity.toLowerCase()) {
                         botResponse = new BotResponse(
                             'favorite', 
                             entity, 
@@ -185,7 +180,7 @@ export class BotResponseMessage {
             case 'standsFor':
             var entity = entities[0].entity;
                 for (var option in this.savedStandsFor) {
-                    if (this.savedStandsFor[option].toLowerCase() === entity.toLowerCase()) {
+                    if (this.savedStandsFor[option].entity.toLowerCase() === entity.toLowerCase()) {
                         botResponse = new BotResponse(
                             'standsFor', 
                             entity, 
