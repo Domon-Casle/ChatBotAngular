@@ -16,4 +16,15 @@ export class MessageItemComponent implements OnInit {
   ngOnInit() {
   }
 
+  getUserClass() {
+    if (this.message.user === 'Bot') {
+      return {
+        'botUser': true
+      };
+    } else {
+      return {
+        'userUser': true
+      };
+    }
+  }
 }

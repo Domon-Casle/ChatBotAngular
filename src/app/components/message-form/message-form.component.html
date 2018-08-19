@@ -2,6 +2,6 @@
   <message-list [messages]="messages"></message-list>
 </div>
 <div class="chatcontrol">
-  <input type="text" class="form-control chatinput" [(ngModel)]="message.content" />
+  <input type="text" class="form-control chatinput" [(ngModel)]="message.content" (keyup)="handleEnter($event)"/>
   <button class="btn btn-success sendbtn" (click)="sendMessage()">Send</button>
 </div>

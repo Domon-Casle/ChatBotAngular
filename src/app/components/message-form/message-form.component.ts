@@ -12,7 +12,6 @@ import { BotResponseMessage } from 'src/app/Shared/botResponseMessage';
 })
 export class MessageFormComponent implements OnInit {
 
-  @Input('message')
   private message: Message;
 
   @Input('messages')
@@ -32,28 +31,38 @@ export class MessageFormComponent implements OnInit {
   ngOnInit() {
     this.message = new Message('', false);
 
-    var startingMessage = new Message('Hi this is a easy answer bot', true);
+    var startingMessage = new Message('Hi this is an easy answer bot', true);
     this.messages = [];
     this.messages.push(startingMessage);
   }
+
+  public handleEnter(event): void {
+    if (event.keyCode === 13) {
+      this.sendMessage();
+    }
+  };
 
   public sendMessage(): void {
     this.message.timestamp = new Date();
     this.messages.push(this.message);
 
     switch (this.message.content) {
+      case "Hi":
+      case "HI":
       case "hi":
         var hiMessage = new Message('Hi!', true);
         this.messages.push(hiMessage);
         this.hasSaidHi = true;
         break;
 
+      case "Howdy":
       case "howdy":
         var hiMessage = new Message('Howdy!!', true);
         this.messages.push(hiMessage);
         this.hasSaidHowdy = true;
         break;
 
+      case "Hello":
       case "hello":
         var hiMessage = new Message('Hello!!!', true);
         this.messages.push(hiMessage);
