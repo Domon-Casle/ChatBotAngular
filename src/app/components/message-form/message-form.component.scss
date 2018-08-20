@@ -5,3 +5,9 @@
 .chatinput {
     width: 90%;
 }
+
+.chatarea {
+    height: 80vh;
+    max-height: 80vh;
+    overflow: auto;
+}

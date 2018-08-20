@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef } from '@angular/core';
 import { Message } from 'src/app/models/message';
 import { LuisaiService } from '../../services/luisai.service';
 import { map } from "rxjs/operators";
@@ -11,7 +11,6 @@ import { BotResponseMessage } from 'src/app/Shared/botResponseMessage';
   styleUrls: ['./message-form.component.scss']
 })
 export class MessageFormComponent implements OnInit {
-
   private message: Message;
 
   @Input('messages')
@@ -33,7 +32,7 @@ export class MessageFormComponent implements OnInit {
 
     var startingMessage = new Message('Hi this is an easy answer bot', true);
     this.messages = [];
-    this.messages.push(startingMessage);
+    this.addToMessage(startingMessage);
   }
 
   public handleEnter(event): void {
@@ -44,34 +43,34 @@ export class MessageFormComponent implements OnInit {
 
   public sendMessage(): void {
     this.message.timestamp = new Date();
-    this.messages.push(this.message);
+    this.addToMessage(this.message);
 
     switch (this.message.content) {
       case "Hi":
       case "HI":
       case "hi":
         var hiMessage = new Message('Hi!', true);
-        this.messages.push(hiMessage);
+        this.addToMessage(hiMessage);
         this.hasSaidHi = true;
         break;
 
       case "Howdy":
       case "howdy":
         var hiMessage = new Message('Howdy!!', true);
-        this.messages.push(hiMessage);
+        this.addToMessage(hiMessage);
         this.hasSaidHowdy = true;
         break;
 
       case "Hello":
       case "hello":
         var hiMessage = new Message('Hello!!!', true);
-        this.messages.push(hiMessage);
+        this.addToMessage(hiMessage);
         this.hasSaidHello = true;
         break;
       
       case "goodbye":
         var goodByeMessage = new Message('Good bye!!!! Have a great day!', true);
-        this.messages.push(goodByeMessage);
+        this.addToMessage(goodByeMessage);
         break;
 
       default:
@@ -81,10 +80,9 @@ export class MessageFormComponent implements OnInit {
         .subscribe(
           luisResult => {
             var luisResultJSON = JSON.parse(luisResult.toString());
-            console.log(luisResultJSON);
             var result = this.getBotResponseMessage(luisResultJSON);
             var botMessage = new Message(result, true);
-            this.messages.push(botMessage);
+            this.addToMessage(botMessage);
           },
           err => console.log(err),
           () => console.log("No errors to report!")
@@ -94,7 +92,7 @@ export class MessageFormComponent implements OnInit {
 
     if (this.hasSaidHello && this.hasSaidHi && this.hasSaidHowdy && !this.hasSaidBigHi) {
       var bigHiMessage = new Message('Ok ok i get it HI! Howdy! and Hello! Have a great one!', true);
-      this.messages.push(bigHiMessage);
+      this.addToMessage(bigHiMessage);
       this.hasSaidBigHi = true;
     }
 
@@ -108,4 +106,12 @@ export class MessageFormComponent implements OnInit {
       return "I'm sorry I'm not sure how to reply... check your spelling and try again. Thanks!";
     }
   };
+
+  private addToMessage(message) {
+    if (this.messages.length > 7) {
+      this.messages.splice(0, 1);
+    }
+
+    this.messages.push(message);
+  }
 }
